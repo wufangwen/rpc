@@ -1,4 +1,4 @@
-package wfw.rpc.test.version4.common;
+package wfw.rpc.test.version5.common;
 
 import lombok.AllArgsConstructor;
 
@@ -46,7 +46,7 @@ public class WorkThread implements Runnable{
         try {
             method = service.getClass().getMethod(request.getMethodName(), request.getParamsTypes());
             Object invoke = method.invoke(service, request.getParams());
-            return RPCResponse.success(invoke,request.getRequestId());
+            return RPCResponse.success(invoke);
         } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
             e.printStackTrace();
             System.out.println("方法执行错误");

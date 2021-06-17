@@ -10,6 +10,7 @@ public class RoundLoadBalance implements LoadBalance{
     @Override
     public String balance(List<String> addressList) {
         choose++;
+
         choose = choose%addressList.size();
         return addressList.get(choose);
     }

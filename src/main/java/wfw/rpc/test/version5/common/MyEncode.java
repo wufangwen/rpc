@@ -1,12 +1,9 @@
-package wfw.rpc.test.version6.code;
+package wfw.rpc.test.version5.common;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.MessageToByteEncoder;
 import lombok.AllArgsConstructor;
-import wfw.rpc.test.version6.common.MessageType;
-import wfw.rpc.test.version6.common.RPCRequest;
-import wfw.rpc.test.version6.common.RPCResponse;
 
 /**
  * 依次按照自定义的消息格式写入，传入的数据为request或者response
@@ -15,11 +12,10 @@ import wfw.rpc.test.version6.common.RPCResponse;
 @AllArgsConstructor
 public class MyEncode extends MessageToByteEncoder {
     private Serializer serializer;
-    private static final int MAGIC_NUMBER = 0xCAFEBABE;
 
     @Override
     protected void encode(ChannelHandlerContext ctx, Object msg, ByteBuf out) throws Exception {
-        out.writeInt(MAGIC_NUMBER);
+        System.out.println(msg.getClass());
         // 写入消息类型
         if(msg instanceof RPCRequest){
             out.writeShort(MessageType.REQUEST.getCode());
@@ -28,7 +24,6 @@ public class MyEncode extends MessageToByteEncoder {
             out.writeShort(MessageType.RESPONSE.getCode());
         }
         // 写入序列化方式
-
         out.writeShort(serializer.getType());
         // 得到序列化数组
         byte[] serialize = serializer.serialize(msg);

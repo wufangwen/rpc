@@ -1,12 +1,10 @@
-package wfw.rpc.test.version6.code;
+package wfw.rpc.test.version5.common;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.ByteToMessageDecoder;
 import lombok.AllArgsConstructor;
-import wfw.rpc.test.version6.common.MessageType;
 
-import javax.xml.transform.Source;
 import java.util.List;
 
 /**
@@ -14,16 +12,10 @@ import java.util.List;
  */
 @AllArgsConstructor
 public class MyDecode extends ByteToMessageDecoder {
-    private static final int MAGIC_NUMBER = 0xCAFEBABE;
+
 
     @Override
     protected void decode(ChannelHandlerContext ctx, ByteBuf in, List<Object> out) throws Exception {
-        //新加魔数
-        int magic = in.readInt();
-        if (magic != MAGIC_NUMBER) {
-            throw new Exception("魔数错误");
-        }
-
         // 1. 读取消息类型
         short messageType = in.readShort();
         // 现在还只支持request与response请求
@@ -36,7 +28,6 @@ public class MyDecode extends ByteToMessageDecoder {
         short serializerType = in.readShort();
         // 根据类型得到相应的序列化器
         Serializer serializer = Serializer.getSerializerByCode(serializerType);
-
         if(serializer == null)throw new RuntimeException("不存在对应的序列化器");
         // 3. 读取数据序列化后的字节长度
         int length = in.readInt();
@@ -45,7 +36,6 @@ public class MyDecode extends ByteToMessageDecoder {
         in.readBytes(bytes);
         // 用对应的序列化器解码字节数组
         Object deserialize = serializer.deserialize(bytes, messageType);
-
         out.add(deserialize);
     }
 }

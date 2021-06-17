@@ -1,13 +1,12 @@
-package wfw.rpc.test.version4.client;
+package wfw.rpc.test.version5.client;
 
 import lombok.AllArgsConstructor;
-import wfw.rpc.test.version4.common.RPCRequest;
-import wfw.rpc.test.version4.common.RPCResponse;
+import wfw.rpc.test.version5.common.RPCRequest;
+import wfw.rpc.test.version5.common.RPCResponse;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
-import java.util.UUID;
 
 @AllArgsConstructor
 public class RPCClientProxy implements InvocationHandler {
@@ -18,7 +17,7 @@ public class RPCClientProxy implements InvocationHandler {
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
         // request的构建，使用了lombok中的builder，代码简洁
         RPCRequest request = RPCRequest.builder().interfaceName(method.getDeclaringClass().getName())
-                .methodName(method.getName()).requestId(UUID.randomUUID().toString())
+                .methodName(method.getName())
                 .params(args).paramsTypes(method.getParameterTypes()).build();
         //数据传输
         RPCResponse response = client.sendRequest(request);
